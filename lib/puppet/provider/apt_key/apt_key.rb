@@ -182,9 +182,11 @@ Puppet::Type.type(:apt_key).provide(:apt_key) do
       end
       command.push('--recv-keys', resource[:id])
     elsif resource[:content]
-      command.push('add', tempfile(resource[:content]).path)
+      key_file = tempfile(resource[:content])
+      command.push('add', key_file.path)
     elsif resource[:source]
-      command.push('add', source_to_file(resource[:source]).path)
+      key_file = source_to_file(resource[:source])
+      command.push('add', key_file.path)
     # In case we really screwed up, better safe than sorry.
     else
       fail("an unexpected condition occurred while trying to add the key: #{resource[:id]}")
